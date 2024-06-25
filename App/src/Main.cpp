@@ -11,6 +11,7 @@ int main() {
     constexpr int ROWS = 67;
     constexpr int COLS = 67;
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT); 
     InitWindow(1280, 720, "Cloth");
 
     SetTargetFPS(FPS);
