@@ -13,6 +13,8 @@ public:
     Stick(Point& pointA, Point& pointB, float length);
     ~Stick();
 
-    void update(float deltaTime);
+    void update(double deltaTime);
+    const Point& getPointA() const;
+    const Point& getPointB() const;
 
 };

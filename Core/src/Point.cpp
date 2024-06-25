@@ -12,7 +12,7 @@ const Vector& Point::getPosition() const {
     return this->currentPosition;
 }
 
-void Point::update(float deltaTime, float prevDeltaTime, const Vector &force) {
+void Point::update(double deltaTime, double prevDeltaTime, const Vector &force) {
 
     if (isPinned) return;
 
@@ -22,11 +22,8 @@ void Point::update(float deltaTime, float prevDeltaTime, const Vector &force) {
         prevDeltaTime = deltaTime == 0 ? 1 : deltaTime;
     }
 
-    this->currentPosition.x =
-         this->currentPosition.x + (this->currentPosition.x - this->prevPosition.x) * (deltaTime / prevDeltaTime) + acceleration.x * deltaTime * deltaTime;
-
-    this->currentPosition.y =
-         this->currentPosition.y + (this->currentPosition.y - this->prevPosition.y) * (deltaTime / prevDeltaTime) + acceleration.y * deltaTime * deltaTime;
+    this->currentPosition.x += (this->currentPosition.x - this->prevPosition.x) * deltaTime / prevDeltaTime + acceleration.x * deltaTime * (deltaTime + prevDeltaTime) / 2;
+    this->currentPosition.y += (this->currentPosition.y - this->prevPosition.y) * deltaTime / prevDeltaTime + acceleration.y * deltaTime * (deltaTime + prevDeltaTime) / 2;
 
     this->prevPosition = currentPositionCopy;
 }

@@ -7,7 +7,7 @@ private:
 
     Vector currentPosition;
     Vector prevPosition;
-    float prevDeltaTime = 0;
+    double prevDeltaTime = 0;
     float mass;
     bool isPinned;
 
@@ -19,5 +19,6 @@ public:
     const Vector& getPosition() const;
     void setPosition(float x, float y);
     void setIsPinned(bool isPinned);
-    void update(float deltaTime, float prevDeltaTime, const Vector& force);
+    inline bool getIsPinned() const { return isPinned; }
+    void update(double deltaTime, double prevDeltaTime, const Vector& force);
 };

@@ -9,7 +9,15 @@ Stick::~Stick() {
 
 }
 
-void Stick::update(float deltaTime) {
+const Point& Stick::getPointA() const {
+    return this->pointA;
+}
+
+const Point& Stick::getPointB() const {
+    return this->pointB;
+}
+
+void Stick::update(double deltaTime) {
 
     Vector pointsDiff = this->pointA.getPosition() - this->pointB.getPosition();
     float distance = sqrtf(pointsDiff.x * pointsDiff.x + pointsDiff.y * pointsDiff.y);
