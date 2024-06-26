@@ -6,6 +6,7 @@ set(SOURCE_FILE_LIST
 "src/Simulation.cpp"
 "src/Stick.cpp"
 "src/Point.cpp"
+"src/Collision.cpp"
 )
 
 add_library(ClothCore ${SOURCE_FILE_LIST})
