@@ -36,6 +36,6 @@ void Point::setPosition(float x, float y) {
 
     if (isPinned) return;
 
-    this->currentPosition.x = x;    
+    this->currentPosition.x = x;
     this->currentPosition.y = y;
 }

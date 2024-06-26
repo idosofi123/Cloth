@@ -26,7 +26,7 @@ void Simulation::update(double deltaTime) {
         point->update(deltaTime, this->prevDeltaTime, this->currentForce);
     }
 
-    constexpr int CONSTRAINTS_UPDATE_ITERATIONS = 5;
+    constexpr int CONSTRAINTS_UPDATE_ITERATIONS = 3;
 
     for (int i = 0; i < CONSTRAINTS_UPDATE_ITERATIONS; i++) {
         for (auto &stick : this->sticks) {
@@ -45,6 +45,6 @@ const std::vector<std::unique_ptr<Point>>& Simulation::getPoints() const {
     return this->points;
 }
 
-const std::vector<Stick>& Simulation::getSticks() const {
+std::vector<Stick>& Simulation::getSticks() {
     return this->sticks;
 }

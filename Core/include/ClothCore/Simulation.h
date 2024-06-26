@@ -25,5 +25,5 @@ public:
     void update(double deltaTime);
     const std::vector<std::unique_ptr<Point>>& getPoints() const;
     Point& getPoint(int index);
-    const std::vector<Stick>& getSticks() const;
+    std::vector<Stick>& getSticks();
 };
