@@ -6,12 +6,12 @@
 
 int main() {
     
-    constexpr int FPS = 120;
+    constexpr int FPS = 60;
     constexpr int SCREEN_WIDTH = 1280;
     constexpr int SCREEN_HEIGHT = 720;
-    constexpr int ROWS = 31;
-    constexpr int COLS = 31;
-    constexpr float SPACE = 8.f;
+    constexpr int ROWS = 49;
+    constexpr int COLS = 49;
+    constexpr float SPACE = 7.f;
     constexpr float OFFSET_Y = 50.f;
     constexpr float OFFSET_X = (SCREEN_WIDTH - SPACE * (COLS - 1)) / 2;
 
@@ -19,11 +19,11 @@ int main() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cloth");
 
     SetTargetFPS(FPS);
+    SetWindowState(FLAG_VSYNC_HINT);
 
     Simulation simulation{SCREEN_HEIGHT - OFFSET_Y};
     simulation.addCloth(ROWS, COLS, SPACE, OFFSET_X, OFFSET_Y);
     simulation.addForce({ 40, 200 });
-    simulation.addArrow({ 20, 500 }, 100, { 30000, -30000 });
 
     double previousTime = GetTime();
 
@@ -44,9 +44,18 @@ int main() {
             }
         }
 
+        if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+
+            Vector mousePos{ GetMousePosition().x, GetMousePosition().y };
+
+            simulation.addArrow(mousePos, 75, { 500.f, -200.f });
+        }
+
         // Update
         double currentTime = GetTime();
-        simulation.update(currentTime - previousTime);
+        double deltaTime = currentTime - previousTime;
+        simulation.update(deltaTime);
+
         previousTime = currentTime;
 
         // Render

@@ -28,6 +28,10 @@ void Point::update(double deltaTime, double prevDeltaTime, const Vector &force) 
     this->prevPosition = currentPositionCopy;
 }
 
+void Point::setInnerMomentum(Vector force) {
+    this->prevPosition = this->currentPosition - force;
+}
+
 void Point::setIsPinned(bool isPinned) {
     this->isPinned = isPinned;
 }

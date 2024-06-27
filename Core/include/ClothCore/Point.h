@@ -21,4 +21,5 @@ public:
     void setIsPinned(bool isPinned);
     inline bool getIsPinned() const { return isPinned; }
     void update(double deltaTime, double prevDeltaTime, const Vector& force);
+    void setInnerMomentum(Vector force);
 };

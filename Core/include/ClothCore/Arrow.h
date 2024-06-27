@@ -12,7 +12,7 @@ private:
     std::unique_ptr<Point> endPoint;
     Stick stick;
     Vector firingForce;
-    double elapsedTime = 0.0;
+    bool fired = false;
 
     static constexpr double FIRING_FORCE_TIME = 0.01;
 
@@ -24,5 +24,6 @@ public:
 
     void update(double deltaTime, double prevDeltaTime, const Vector &force);
     const Stick& getStick() const;
+    void fire(double deltaTime);
 
 };

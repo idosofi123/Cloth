@@ -14,27 +14,20 @@ Arrow::~Arrow() {
 
 void Arrow::update(double deltaTime, double prevDeltaTime, const Vector &force) {
 
-    double firingForceAppliedTime = std::min(std::max(FIRING_FORCE_TIME - this->elapsedTime, 0.0), deltaTime);
-
-    if (firingForceAppliedTime > 0.0) {
-
-        Vector enhancedForce = this->firingForce + force;
-
-        this->endPoint->update(firingForceAppliedTime, prevDeltaTime, enhancedForce);    
-
-        deltaTime -= firingForceAppliedTime;
-        prevDeltaTime = firingForceAppliedTime;
+    if (!this->fired) {
+        this->fire(deltaTime);
+        prevDeltaTime = deltaTime;
     }
 
-    if (deltaTime > 0.0) {
-        this->endPoint->update(deltaTime, prevDeltaTime, force);
-    }
-
+    this->endPoint->update(deltaTime, prevDeltaTime, force);
     this->stick.update(deltaTime, 1.f);
-    
-    this->elapsedTime += deltaTime;
 }
 
 const Stick &Arrow::getStick() const {
     return this->stick;
+}
+
+void Arrow::fire(double deltaTime) {
+    this->endPoint->setInnerMomentum(this->firingForce * deltaTime);
+    this->fired = true;
 }
