@@ -18,8 +18,8 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT); 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cloth");
 
-    SetTargetFPS(FPS);
-    SetWindowState(FLAG_VSYNC_HINT);
+    // SetTargetFPS(FPS);
+    // SetWindowState(FLAG_VSYNC_HINT);
 
     Simulation simulation{SCREEN_HEIGHT - OFFSET_Y, SCREEN_WIDTH};
     simulation.addCloth(ROWS, COLS, SPACE, OFFSET_X, OFFSET_Y);
@@ -44,7 +44,7 @@ int main() {
             }
         }
 
-        if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
 
             Vector mousePos{ GetMousePosition().x, GetMousePosition().y };
 
@@ -87,7 +87,7 @@ int main() {
             DrawLine(posA.x, posA.y, posB.x, posB.y, GOLD);
         }
 
-        DrawText(std::to_string(1 / GetFrameTime()).c_str(), 30, 30, 24, WHITE);
+        DrawText(("FPS: " + std::to_string(static_cast<int>(std::round(1 / GetFrameTime())))).c_str(), 30, 30, 24, WHITE);
 
         EndDrawing();
     }
