@@ -17,7 +17,7 @@ const Point& Stick::getPointB() const {
     return this->pointB;
 }
 
-void Stick::update(double deltaTime) {
+void Stick::update(double deltaTime, float pointAFactor) {
 
     if (!this->isActive) {
         return;
@@ -27,10 +27,13 @@ void Stick::update(double deltaTime) {
 
     float distance = sqrtf(pointsDiff.x * pointsDiff.x + pointsDiff.y * pointsDiff.y);
 
-    Vector constraintOffset = pointsDiff * ((this->length - distance) / distance) * 0.5;
+    Vector constraintOffset = pointsDiff * ((this->length - distance) / distance);
 
-    this->pointA.setPosition(this->pointA.getPosition().x + constraintOffset.x, this->pointA.getPosition().y + constraintOffset.y);
-    this->pointB.setPosition(this->pointB.getPosition().x - constraintOffset.x, this->pointB.getPosition().y - constraintOffset.y);
+    Vector constraintOffsetA = constraintOffset * pointAFactor;
+    Vector constraintOffsetB = constraintOffset * (1 - pointAFactor);
+
+    this->pointA.setPosition(this->pointA.getPosition().x + constraintOffsetA.x, this->pointA.getPosition().y + constraintOffsetA.y);
+    this->pointB.setPosition(this->pointB.getPosition().x - constraintOffsetB.x, this->pointB.getPosition().y - constraintOffsetB.y);
 }
 
 void Stick::setIsActive(bool isActive) {

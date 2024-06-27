@@ -13,7 +13,7 @@ private:
 
 public:
 
-    Point(float x, float y, float mass = 1, bool isPinned = false);
+    Point(Vector position, float mass = 1, bool isPinned = false);
     ~Point();
 
     const Vector& getPosition() const;

@@ -7,6 +7,7 @@ set(SOURCE_FILE_LIST
 "src/Stick.cpp"
 "src/Point.cpp"
 "src/Collision.cpp"
+"src/Arrow.cpp"
 )
 
 add_library(ClothCore ${SOURCE_FILE_LIST})

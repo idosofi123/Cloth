@@ -1,6 +1,6 @@
 #include "ClothCore/Point.h"
 
-Point::Point(float x, float y, float mass, bool isPinned) : currentPosition{ x, y }, prevPosition{ x, y }, mass(mass), isPinned(isPinned) {
+Point::Point(Vector position, float mass, bool isPinned) : currentPosition(position), prevPosition(position), mass(mass), isPinned(isPinned) {
     
 }
 

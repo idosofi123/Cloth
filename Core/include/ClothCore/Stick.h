@@ -14,7 +14,7 @@ public:
     Stick(Point& pointA, Point& pointB, float length);
     ~Stick();
 
-    void update(double deltaTime);
+    void update(double deltaTime, float pointAFactor = 0.5f);
     const Point& getPointA() const;
     const Point& getPointB() const;
     void setIsActive(bool isActive);

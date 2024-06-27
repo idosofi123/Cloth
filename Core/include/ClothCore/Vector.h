@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 struct Vector {
 
@@ -13,6 +14,14 @@ struct Vector {
         return { this->x - other.x, this->y - other.y };
     }
 
+    Vector operator-(float other) const {
+        return { this->x - other, this->y - other };
+    }
+
+    Vector operator+(float other) const {
+        return { this->x + other, this->y + other };
+    }
+
     Vector& operator+=(const Vector &other) {
         this->x += other.x;
         this->y += other.y;
@@ -21,6 +30,10 @@ struct Vector {
 
     Vector operator*(float scalar) {
         return { this->x * scalar, this->y * scalar };
+    }
+
+    Vector normalize() {
+        return *this * (1.f / sqrtf(this->x * this->x + this->y * this->y));
     }
 };
 

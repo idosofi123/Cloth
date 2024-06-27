@@ -6,12 +6,11 @@
 
 int main() {
     
-    constexpr int FPS = 60;
-
+    constexpr int FPS = 120;
     constexpr int SCREEN_WIDTH = 1280;
     constexpr int SCREEN_HEIGHT = 720;
-    constexpr int ROWS = 49;
-    constexpr int COLS = 49;
+    constexpr int ROWS = 31;
+    constexpr int COLS = 31;
     constexpr float SPACE = 8.f;
     constexpr float OFFSET_Y = 50.f;
     constexpr float OFFSET_X = (SCREEN_WIDTH - SPACE * (COLS - 1)) / 2;
@@ -21,24 +20,10 @@ int main() {
 
     SetTargetFPS(FPS);
 
-    Simulation simulation;
-    simulation.addForce({ 20, 150 });
-
-    for (int i = 0; i < ROWS; i++) {
-
-        for (int j = 0; j < COLS; j++) {
-
-            simulation.addPoint(std::make_unique<Point>(j * SPACE + OFFSET_X, i * SPACE + OFFSET_Y, 1, i == 0 && j % 3 == 0));
-
-            if (i > 0) {
-                simulation.addStick({ simulation.getPoint((i - 1) * COLS + j), simulation.getPoint(i * COLS + j), SPACE });
-            }
-
-            if (j > 0) {
-                simulation.addStick({ simulation.getPoint(i * COLS + j - 1), simulation.getPoint(i * COLS + j), SPACE });
-            }
-        }   
-    }
+    Simulation simulation{SCREEN_HEIGHT - OFFSET_Y};
+    simulation.addCloth(ROWS, COLS, SPACE, OFFSET_X, OFFSET_Y);
+    simulation.addForce({ 40, 200 });
+    simulation.addArrow({ 20, 500 }, 100, { 30000, -30000 });
 
     double previousTime = GetTime();
 
@@ -47,7 +32,7 @@ int main() {
         // Handle Input
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 
-            Vector2 mousePos = GetMousePosition();
+            Vector mousePos{ GetMousePosition().x, GetMousePosition().y };
 
             for (auto &stick : simulation.getSticks()) {
                 const Vector& position = stick.getPointA().getPosition();
@@ -57,7 +42,6 @@ int main() {
                     stick.setIsActive(false);
                 }
             }
-
         }
 
         // Update
@@ -86,6 +70,15 @@ int main() {
             const Vector& posB = stick.getPointB().getPosition();
             DrawLine(posA.x, posA.y, posB.x, posB.y, WHITE);
         }
+
+        for (const auto &arrow : simulation.getArrows()) {
+
+            const Vector& posA = arrow.getStick().getPointA().getPosition();
+            const Vector& posB = arrow.getStick().getPointB().getPosition();
+            DrawLine(posA.x, posA.y, posB.x, posB.y, GOLD);
+        }
+
+        DrawText(std::to_string(1 / GetFrameTime()).c_str(), 30, 30, 24, WHITE);
 
         EndDrawing();
     }
