@@ -16,13 +16,14 @@ private:
     Vector currentForce{0 ,0};
     double prevDeltaTime = 0;
     float floorY;
+    float floorX;
 
     void constraintPoints();
     void resolveCollisions();
 
 public:
 
-    Simulation(float floorY);
+    Simulation(float floorY, float floorX);
     ~Simulation();
 
     void addPoint(std::unique_ptr<Point> point);

@@ -9,11 +9,11 @@ Stick::~Stick() {
 
 }
 
-const Point& Stick::getPointA() const {
+Point& Stick::getPointA() const {
     return this->pointA;
 }
 
-const Point& Stick::getPointB() const {
+Point& Stick::getPointB() const {
     return this->pointB;
 }
 

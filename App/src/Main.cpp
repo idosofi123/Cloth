@@ -21,7 +21,7 @@ int main() {
     SetTargetFPS(FPS);
     SetWindowState(FLAG_VSYNC_HINT);
 
-    Simulation simulation{SCREEN_HEIGHT - OFFSET_Y};
+    Simulation simulation{SCREEN_HEIGHT - OFFSET_Y, SCREEN_WIDTH};
     simulation.addCloth(ROWS, COLS, SPACE, OFFSET_X, OFFSET_Y);
     simulation.addForce({ 40, 200 });
 

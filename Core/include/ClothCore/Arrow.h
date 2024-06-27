@@ -14,8 +14,6 @@ private:
     Vector firingForce;
     bool fired = false;
 
-    static constexpr double FIRING_FORCE_TIME = 0.01;
-
 public:
 
     Arrow(Vector position, float length, Vector firingForce);

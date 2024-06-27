@@ -1,7 +1,8 @@
 #include "ClothCore/Simulation.h"
 #include "ClothCore/Collision.h"
+#include <algorithm>
 
-Simulation::Simulation(float floorY) : floorY(floorY) {
+Simulation::Simulation(float floorY, float floorX) : floorY(floorY), floorX(floorX) {
     
 }
 
@@ -52,7 +53,6 @@ void Simulation::update(double deltaTime) {
         for (auto &stick : this->sticks) {
             stick.update(deltaTime);
         }
-        this->constraintPoints();
     }
 
     for (auto &arrow : this->arrows) {
@@ -60,6 +60,7 @@ void Simulation::update(double deltaTime) {
     }
 
     this->resolveCollisions();
+    this->constraintPoints();
 
     this->prevDeltaTime = deltaTime;
 }
@@ -87,7 +88,12 @@ const std::vector<Arrow>& Simulation::getArrows() {
 void Simulation::constraintPoints() {
     for (auto &point : this->points) {
         const auto &position = point->getPosition();
-        point->setPosition(position.x, std::min(position.y, this->floorY));
+        point->setPosition(std::clamp(position.x, 0.f, this->floorX), std::clamp(position.y, 0.f, this->floorY));
+    }
+
+    for (auto &arrow : this->arrows) {
+        const auto &position = arrow.getStick().getPointB().getPosition();
+        arrow.getStick().getPointB().setPosition(std::clamp(position.x, 0.f, this->floorX), std::clamp(position.y, 0.f, this->floorY));
     }
 }
 
