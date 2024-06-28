@@ -1,8 +1,8 @@
 #include "ClothCore/Arrow.h"
 
 Arrow::Arrow(Vector position, float length, Vector firingForce) 
-    : startPoint(std::make_unique<Point>(position - firingForce.normalize() * (length / 2))), 
-      endPoint(std::make_unique<Point>(position + firingForce.normalize() * (length / 2))),
+    : startPoint(std::make_unique<Point>(position - firingForce.normalize() * length)), 
+      endPoint(std::make_unique<Point>(position)),
       stick(*this->startPoint, *this->endPoint, length),
       firingForce(firingForce) {
 

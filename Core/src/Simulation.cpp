@@ -16,7 +16,7 @@ void Simulation::addCloth(int rows, int columns, float space, float offsetX, flo
 
         for (int j = 0; j < columns; j++) {
 
-            this->addPoint(std::make_unique<Point>(Vector{ j * space + offsetX, i * space + offsetY }, 1, i == 0 && j % 3 == 0));
+            this->addPoint(std::make_unique<Point>(Vector{ j * space + offsetX, i * space + offsetY }, 1, i == 0 && j % 10 == 0));
 
             if (i > 0) {
                 this->addStick({ this->getPoint((i - 1) * columns + j), this->getPoint(i * columns + j), space });

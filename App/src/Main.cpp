@@ -4,16 +4,25 @@
 #include <ClothCore/Collision.h>
 #include <string>
 
+void drawArrow(const Arrow &arrow) {
+    const Vector& posA = arrow.getStick().getPointA().getPosition();
+    const Vector& posB = arrow.getStick().getPointB().getPosition();
+    DrawLineEx({posA.x, posA.y}, {posB.x, posB.y}, 3.f, { 177 - 50, 255 - 50, 254 - 50, 255 });
+}
+
 int main() {
     
     constexpr int FPS = 60;
     constexpr int SCREEN_WIDTH = 1280;
     constexpr int SCREEN_HEIGHT = 720;
     constexpr int ROWS = 58;
-    constexpr int COLS = 70;
+    constexpr int COLS = 71;
     constexpr float SPACE = 7.f;
     constexpr float OFFSET_Y = 50.f;
     constexpr float OFFSET_X = (SCREEN_WIDTH - SPACE * (COLS - 1)) / 2;
+    constexpr float ARROW_LENGTH = 75.f;
+    constexpr float ARROW_FORCE_SCALAR = 5.f;
+    constexpr Vector ENVIRONMENT_FORCE{ 50, 200 };
 
     SetConfigFlags(FLAG_MSAA_4X_HINT); 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cloth");
@@ -23,12 +32,15 @@ int main() {
 
     Simulation simulation{SCREEN_HEIGHT - OFFSET_Y, SCREEN_WIDTH};
     simulation.addCloth(ROWS, COLS, SPACE, OFFSET_X, OFFSET_Y);
-    simulation.addForce({ 40, 200 });
+    simulation.addForce(ENVIRONMENT_FORCE);
 
     double previousTime = GetTime();
 
     Shader bloomShader = LoadShader(nullptr, TextFormat("./assets/shaders/bloom.fs", 330));
     RenderTexture2D target = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    Vector2 arrowEndpoint;
+    bool isInitiatingArrow = false;
 
     while (!WindowShouldClose()) {
 
@@ -49,9 +61,18 @@ int main() {
 
         if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
 
-            Vector mousePos{ GetMousePosition().x, GetMousePosition().y };
+            arrowEndpoint = GetMousePosition();
+            isInitiatingArrow = true;
+        }
 
-            simulation.addArrow(mousePos, 75, { 500.f, -200.f });
+        if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
+
+            Vector mousePos{ GetMousePosition().x, GetMousePosition().y };
+            Vector arrowPos{ arrowEndpoint.x, arrowEndpoint.y };
+
+            simulation.addArrow({ arrowEndpoint.x, arrowEndpoint.y }, ARROW_LENGTH, (arrowPos - mousePos) * ARROW_FORCE_SCALAR);
+
+            isInitiatingArrow = false;
         }
 
         // Update
@@ -85,10 +106,11 @@ int main() {
             }
 
             for (const auto &arrow : simulation.getArrows()) {
+                drawArrow(arrow);
+            }
 
-                const Vector& posA = arrow.getStick().getPointA().getPosition();
-                const Vector& posB = arrow.getStick().getPointB().getPosition();
-                DrawLine(posA.x, posA.y, posB.x, posB.y, { 177 - 50, 255 - 50, 254 - 50, 255 });
+            if (isInitiatingArrow) {
+                DrawLineEx(GetMousePosition(), arrowEndpoint, 2.f, PINK);
             }
 
         EndTextureMode();

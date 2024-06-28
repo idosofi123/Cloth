@@ -6,36 +6,28 @@ in vec4 fragColor;
 
 // Input uniform values
 uniform sampler2D texture0;
-uniform vec4 colDiffuse;
 
 // Output fragment color
 out vec4 finalColor;
 
-// NOTE: Add here your custom variables
+const float KERNEL_SIZE = 5.0;
+const vec2 TEXEL_SIZE = 1 / vec2(1280, 720);
 
-const vec2 size = vec2(1280, 720);   // Framebuffer size
-const float samples = 5.0;          // Pixels per axis; higher = bigger glow, worse performance
-const float quality = 2;          // Defines size factor: Lower = smaller glow, better quality
+void main() {
 
-void main()
-{
-    vec4 sum = vec4(0);
-    vec2 sizeFactor = vec2(1)/size*quality;
+    vec4 samplesSum = vec4(0);
+    vec4 sourceColor = texture(texture0, fragTexCoord);
 
-    // Texel color fetching from texture sampler
-    vec4 source = texture(texture0, fragTexCoord);
+    for (float x = -KERNEL_SIZE; x <= KERNEL_SIZE; x++) {
 
-    const int range = 2;            // should be = (samples - 1)/2;
+        for (float y = -KERNEL_SIZE; y <= KERNEL_SIZE; y++) {
 
-    for (int x = -range; x <= range; x++) {
-
-        for (int y = -range; y <= range; y++) {
-
-            vec2 samplePoint = fragTexCoord + vec2(x, y) * sizeFactor;
-            sum += texture(texture0, clamp(samplePoint, 0.f, 1.f));
+            vec2 samplePoint = fragTexCoord + vec2(x, y) * TEXEL_SIZE;
+            samplesSum += texture(texture0, clamp(samplePoint, 0.f, 1.f));
         }
     }
 
-    // Calculate final fragment color
-    finalColor = ((sum/(samples*samples)) + source)*colDiffuse;
+    samplesSum = samplesSum / pow(KERNEL_SIZE * 2.0 + 1.0, 2.0);
+
+    finalColor = sourceColor + samplesSum;
 }
