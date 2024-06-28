@@ -9,8 +9,8 @@ int main() {
     constexpr int FPS = 60;
     constexpr int SCREEN_WIDTH = 1280;
     constexpr int SCREEN_HEIGHT = 720;
-    constexpr int ROWS = 49;
-    constexpr int COLS = 61;
+    constexpr int ROWS = 58;
+    constexpr int COLS = 70;
     constexpr float SPACE = 7.f;
     constexpr float OFFSET_Y = 50.f;
     constexpr float OFFSET_X = (SCREEN_WIDTH - SPACE * (COLS - 1)) / 2;
@@ -88,7 +88,7 @@ int main() {
 
                 const Vector& posA = arrow.getStick().getPointA().getPosition();
                 const Vector& posB = arrow.getStick().getPointB().getPosition();
-                DrawLine(posA.x, posA.y, posB.x, posB.y, GOLD);
+                DrawLine(posA.x, posA.y, posB.x, posB.y, { 177 - 50, 255 - 50, 254 - 50, 255 });
             }
 
         EndTextureMode();
