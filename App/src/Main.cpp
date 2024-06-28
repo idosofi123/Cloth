@@ -10,7 +10,7 @@ int main() {
     constexpr int SCREEN_WIDTH = 1280;
     constexpr int SCREEN_HEIGHT = 720;
     constexpr int ROWS = 49;
-    constexpr int COLS = 49;
+    constexpr int COLS = 61;
     constexpr float SPACE = 7.f;
     constexpr float OFFSET_Y = 50.f;
     constexpr float OFFSET_X = (SCREEN_WIDTH - SPACE * (COLS - 1)) / 2;
@@ -26,6 +26,9 @@ int main() {
     simulation.addForce({ 40, 200 });
 
     double previousTime = GetTime();
+
+    Shader bloomShader = LoadShader(nullptr, TextFormat("./assets/shaders/bloom.fs", 330));
+    RenderTexture2D target = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     while (!WindowShouldClose()) {
 
@@ -59,35 +62,46 @@ int main() {
         previousTime = currentTime;
 
         // Render
+        BeginTextureMode(target);
+
+            ClearBackground(BLACK);
+
+            for (const auto &point : simulation.getPoints()) {
+                if (point->getIsPinned()) {
+                    const Vector& position = point->getPosition();
+                    DrawCircle(position.x, position.y, 2, RED);
+                }
+            }
+
+            for (const auto &stick : simulation.getSticks()) {
+
+                if (!stick.getIsActive()) {
+                    continue;
+                }
+
+                const Vector& posA = stick.getPointA().getPosition();
+                const Vector& posB = stick.getPointB().getPosition();
+                DrawLine(posA.x, posA.y, posB.x, posB.y, WHITE);
+            }
+
+            for (const auto &arrow : simulation.getArrows()) {
+
+                const Vector& posA = arrow.getStick().getPointA().getPosition();
+                const Vector& posB = arrow.getStick().getPointB().getPosition();
+                DrawLine(posA.x, posA.y, posB.x, posB.y, GOLD);
+            }
+
+        EndTextureMode();
+
         BeginDrawing();
-        ClearBackground(BLACK);
 
-        for (const auto &point : simulation.getPoints()) {
-            if (point->getIsPinned()) {
-                const Vector& position = point->getPosition();
-                DrawCircle(position.x, position.y, 2, RED);
-            }
-        }
+            ClearBackground(BLACK);
 
-        for (const auto &stick : simulation.getSticks()) {
+            BeginShaderMode(bloomShader);
+                DrawTextureRec(target.texture, Rectangle{ 0, 0, (float)target.texture.width, (float)-target.texture.height }, Vector2{ 0, 0 }, WHITE);
+            EndShaderMode();
 
-            if (!stick.getIsActive()) {
-                continue;
-            }
-
-            const Vector& posA = stick.getPointA().getPosition();
-            const Vector& posB = stick.getPointB().getPosition();
-            DrawLine(posA.x, posA.y, posB.x, posB.y, WHITE);
-        }
-
-        for (const auto &arrow : simulation.getArrows()) {
-
-            const Vector& posA = arrow.getStick().getPointA().getPosition();
-            const Vector& posB = arrow.getStick().getPointB().getPosition();
-            DrawLine(posA.x, posA.y, posB.x, posB.y, GOLD);
-        }
-
-        DrawText(("FPS: " + std::to_string(static_cast<int>(std::round(1 / GetFrameTime())))).c_str(), 30, 30, 24, WHITE);
+            DrawText(("FPS: " + std::to_string(static_cast<int>(std::round(1 / GetFrameTime())))).c_str(), 30, 30, 24, WHITE);
 
         EndDrawing();
     }

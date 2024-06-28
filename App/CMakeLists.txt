@@ -28,3 +28,10 @@ FetchContent_MakeAvailable(raylib)
 # Linking raylib
 target_link_libraries(ClothApp PRIVATE raylib)
 
+# Copy assets folder to build
+add_custom_command(
+    TARGET ClothApp
+    POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:ClothApp>/assets
+    VERBATIM)
+
