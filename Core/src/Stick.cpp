@@ -1,7 +1,7 @@
 #include "ClothCore/Stick.h"
 #include <math.h>
 
-Stick::Stick(Point &pointA, Point &pointB, float length) : pointA(pointA), pointB(pointB), length(length) {
+Stick::Stick(Point &pointA, Point &pointB, float length, float limit) : pointA(pointA), pointB(pointB), length(length), limit(limit) {
 
 }
 
@@ -26,6 +26,11 @@ void Stick::update(double deltaTime, float pointAFactor) {
     Vector pointsDiff = this->pointA.getPosition() - this->pointB.getPosition();
 
     float distance = sqrtf(pointsDiff.x * pointsDiff.x + pointsDiff.y * pointsDiff.y);
+
+    if (this->limit > 0.f && distance > this->limit && !this->pointA.getIsPinned() && !this->pointB.getIsPinned()) {
+        this->setIsActive(false);
+        return;
+    }
 
     Vector constraintOffset = pointsDiff * ((this->length - distance) / distance);
 

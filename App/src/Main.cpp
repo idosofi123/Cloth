@@ -3,6 +3,7 @@
 #include <ClothCore/Simulation.h>
 #include <ClothCore/Collision.h>
 #include <string>
+#include <format>
 
 void drawArrow(const Arrow &arrow) {
     const Vector& posA = arrow.getStick().getPointA().getPosition();
@@ -12,11 +13,11 @@ void drawArrow(const Arrow &arrow) {
 
 int main() {
     
-    constexpr int FPS = 60;
-    constexpr int SCREEN_WIDTH = 1280;
-    constexpr int SCREEN_HEIGHT = 720;
-    constexpr int ROWS = 58;
-    constexpr int COLS = 71;
+    constexpr int FPS = 120;
+    constexpr int SCREEN_WIDTH = 1920;
+    constexpr int SCREEN_HEIGHT = 1080;
+    constexpr int ROWS = 80;
+    constexpr int COLS = 91;
     constexpr float SPACE = 7.f;
     constexpr float OFFSET_Y = 50.f;
     constexpr float OFFSET_X = (SCREEN_WIDTH - SPACE * (COLS - 1)) / 2;
@@ -27,8 +28,8 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT); 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cloth");
 
-    // SetTargetFPS(FPS);
-    // SetWindowState(FLAG_VSYNC_HINT);
+    SetTargetFPS(FPS);
+    SetWindowState(FLAG_VSYNC_HINT);
 
     Simulation simulation{SCREEN_HEIGHT - OFFSET_Y, SCREEN_WIDTH};
     simulation.addCloth(ROWS, COLS, SPACE, OFFSET_X, OFFSET_Y);
@@ -124,6 +125,7 @@ int main() {
             EndShaderMode();
 
             DrawText(("FPS: " + std::to_string(static_cast<int>(std::round(1 / GetFrameTime())))).c_str(), 30, 30, 24, WHITE);
+            DrawText((std::format("Environmental Force: ({}, {})", ENVIRONMENT_FORCE.x, ENVIRONMENT_FORCE.y)).c_str(), 30, 60, 24, WHITE);
 
         EndDrawing();
     }

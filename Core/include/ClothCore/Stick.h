@@ -8,10 +8,11 @@ private:
     Point& pointB;
     float length;
     bool isActive = true;
+    float limit;
 
 public:
 
-    Stick(Point& pointA, Point& pointB, float length);
+    Stick(Point& pointA, Point& pointB, float length, float limit = 0.f);
     ~Stick();
 
     void update(double deltaTime, float pointAFactor = 0.5f);

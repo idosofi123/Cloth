@@ -12,6 +12,8 @@ Simulation::~Simulation() {
 
 void Simulation::addCloth(int rows, int columns, float space, float offsetX, float offsetY) {
     
+    constexpr float CLOTH_THREAD_LIMIT = 25.f;
+
     for (int i = 0; i < rows; i++) {
 
         for (int j = 0; j < columns; j++) {
@@ -19,11 +21,11 @@ void Simulation::addCloth(int rows, int columns, float space, float offsetX, flo
             this->addPoint(std::make_unique<Point>(Vector{ j * space + offsetX, i * space + offsetY }, 1, i == 0 && j % 10 == 0));
 
             if (i > 0) {
-                this->addStick({ this->getPoint((i - 1) * columns + j), this->getPoint(i * columns + j), space });
+                this->addStick({ this->getPoint((i - 1) * columns + j), this->getPoint(i * columns + j), space, CLOTH_THREAD_LIMIT });
             }
 
             if (j > 0) {
-                this->addStick({ this->getPoint(i * columns + j - 1), this->getPoint(i * columns + j), space });
+                this->addStick({ this->getPoint(i * columns + j - 1), this->getPoint(i * columns + j), space, CLOTH_THREAD_LIMIT });
             }
         }   
     }
@@ -43,7 +45,7 @@ void Simulation::addForce(Vector force) {
 
 void Simulation::update(double deltaTime) {
 
-    constexpr int CONSTRAINTS_UPDATE_ITERATIONS = 3;
+    constexpr int CONSTRAINTS_UPDATE_ITERATIONS = 5;
 
     for (auto &point : this->points) {
         point->update(deltaTime, this->prevDeltaTime, this->currentForce);
