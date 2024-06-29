@@ -1,2 +1,4 @@
 # Cloth
-Cloth physics simulation implementation, using C++ and raylib
+*A 2D realistic cloth physics simulation implementation.*
+
+Developed using C++ and rendered with raylib.
